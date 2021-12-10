@@ -1,8 +1,3 @@
---
--- File generated with SQLiteStudio v3.3.3 on Thu Dec 9 22:08:41 2021
---
--- Text encoding used: System
---
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
@@ -63,6 +58,24 @@ CREATE VIEW AvailableItems AS
            Quantity
       FROM Grocery
      WHERE Grocery.Quantity > 0;
+
+
+-- View: EmployeeBaggedItems
+CREATE VIEW EmployeeBaggedItems AS
+    SELECT ItemName
+      FROM Grocery
+     WHERE Grocery.SKUNumber IN (
+               SELECT SKUNumber
+                 FROM ShoppingCartContents
+                WHERE CustomerID IN (
+                          SELECT CustomerID
+                            FROM EmployeeCustomers
+                           WHERE EmployeeID IN (
+                                     SELECT ID
+                                       FROM Employee
+                                 )
+                      )
+           );
 
 
 -- View: ExistingEmployees
